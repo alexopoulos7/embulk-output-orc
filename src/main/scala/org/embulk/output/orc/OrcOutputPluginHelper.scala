@@ -23,7 +23,7 @@ object OrcOutputPluginHelper {
         val s3Url = parseS3Url(fpath)
         val s3client = new AmazonS3Client(new ProfileCredentialsProvider)
         if (task.getEndpoint.isPresent) s3client.setEndpoint(task.getEndpoint.get)
-        s3client.deleteObject(new DeleteObjectRequest(s3Url.getBucket, s3Url.getKey))
+        s3client.deleteObject(new DeleteObjectRequest(s3Url.bucket, s3Url.key))
       case _ =>
     }
   }
@@ -52,10 +52,5 @@ object OrcOutputPluginHelper {
     new OrcOutputPluginHelper.AmazonS3URILikeObject(bucket, key)
   }
 
-  case class AmazonS3URILikeObject(var bucket: String, var key: String) {
-    def getBucket: String = bucket
-
-    def getKey: String = key
-  }
-
+  case class AmazonS3URILikeObject(bucket: String, key: String)
 }

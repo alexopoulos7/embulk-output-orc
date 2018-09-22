@@ -65,7 +65,7 @@ public class OrcOutputPluginHelperTest
     {
         OrcOutputPluginHelper.AmazonS3URILikeObject parts =
                 OrcOutputPluginHelper.parseS3Url(url);
-        assertThat(parts.getBucket(), is(bucket));
-        assertThat(parts.getKey(), is(key));
+        assertThat(parts.bucket(), is(bucket));
+        assertThat(parts.key(), is(key));
     }
 }
