@@ -6,9 +6,13 @@ import org.apache.hadoop.hive.ql.exec.vector._
 import org.embulk.spi.{Column, ColumnVisitor, PageReader}
 
 class OrcColumnVisitor(val reader: PageReader, val batch: VectorizedRowBatch, val i: Integer) extends ColumnVisitor {
-  override def booleanColumn(column: Column): Unit = if (reader.isNull(column)) batch.cols(column.getIndex).asInstanceOf[LongColumnVector].vector(i) = 0
-  else if (reader.getBoolean(column)) batch.cols(column.getIndex).asInstanceOf[LongColumnVector].vector(i) = 1
-  else batch.cols(column.getIndex).asInstanceOf[LongColumnVector].vector(i) = 0
+  override def booleanColumn(column: Column): Unit = {
+    column match {
+      case _ if reader.isNull(column) => batch.cols(column.getIndex).asInstanceOf[LongColumnVector].vector(i) = 0
+      case _ if reader.getBoolean(column) => batch.cols(column.getIndex).asInstanceOf[LongColumnVector].vector(i) = 1
+      case _ => batch.cols(column.getIndex).asInstanceOf[LongColumnVector].vector(i) = 0
+    }
+  }
 
   override def longColumn(column: Column): Unit = batch.cols(column.getIndex).asInstanceOf[LongColumnVector].vector(i) = reader.getLong(column)
 
